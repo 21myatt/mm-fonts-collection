@@ -12,6 +12,12 @@ function HomePage() {
         <button onClick={() => navigate("/open-source-fonts")}>
           Open source fonts <ArrowRight size={17} />
         </button>
+        <button onClick={() => navigate("/word-art")}>
+          Word Art <ArrowRight size={17} />
+        </button>
+        <button onClick={() => navigate("/text-2-png")}>
+          Text to PNG <ArrowRight size={17} />
+        </button>
       </section>
     </main>
   );

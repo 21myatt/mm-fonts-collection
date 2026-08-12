@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 
-type RoutePath = "/" | "/open-source-fonts";
+type RoutePath = "/" | "/open-source-fonts" | "/word-art" | "/text-2-png";
 
 interface RouterContextValue {
   path: RoutePath;
@@ -24,8 +24,13 @@ const appPath = (path: string) =>
 
 const browserPath = (path: RoutePath) => `${basePath}${path === "/" ? "/" : path}`;
 
-const normalizePath = (path: string): RoutePath =>
-  appPath(path) === "/open-source-fonts" ? "/open-source-fonts" : "/";
+const normalizePath = (path: string): RoutePath => {
+  const pathWithoutBase = appPath(path);
+  if (pathWithoutBase === "/open-source-fonts") return "/open-source-fonts";
+  if (pathWithoutBase === "/word-art") return "/word-art";
+  if (pathWithoutBase === "/text-2-png") return "/text-2-png";
+  return "/";
+};
 
 export function RouterProvider({ children }: { children: ReactNode }) {
   const [path, setPath] = useState<RoutePath>(() =>

@@ -40,6 +40,15 @@ function Header({ search, setSearch, onFilters }: HeaderProps) {
         >
           Fonts
         </button>
+        <button className="section-link" onClick={() => navigate("/word-art")}>
+          Word Art
+        </button>
+        <button
+          className="section-link"
+          onClick={() => navigate("/text-2-png")}
+        >
+          Text to PNG
+        </button>
         <button
           className="mobile-filter"
           onClick={onFilters}

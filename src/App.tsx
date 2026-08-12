@@ -1,5 +1,7 @@
 import HomePage from "./pages/HomePage";
 import OpenSourceFontsPage from "./pages/OpenSourceFontsPage";
+import TextToPngPage from "./pages/TextToPngPage";
+import WordArtPage from "./pages/WordArtPage";
 import { RouterProvider, useRouter } from "./router";
 
 function App() {
@@ -12,7 +14,10 @@ function App() {
 
 function AppRoute() {
   const { path } = useRouter();
-  return path === "/open-source-fonts" ? <OpenSourceFontsPage /> : <HomePage />;
+  if (path === "/open-source-fonts") return <OpenSourceFontsPage />;
+  if (path === "/word-art") return <WordArtPage />;
+  if (path === "/text-2-png") return <TextToPngPage />;
+  return <HomePage />;
 }
 
 export default App;

@@ -58,6 +58,8 @@ these GitHub Pages URLs:
 
 - `https://21myatt.github.io/mm-fonts-collection/`
 - `https://21myatt.github.io/mm-fonts-collection/open-source-fonts`
+- `https://21myatt.github.io/mm-fonts-collection/word-art`
+- `https://21myatt.github.io/mm-fonts-collection/text-2-png`
 
 The production build also copies `dist/index.html` to
 `dist/404.html` so GitHub Pages can fall back to the SPA on direct route loads.

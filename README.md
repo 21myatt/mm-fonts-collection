@@ -4,7 +4,7 @@ A responsive, searchable preview for **132 Myanmar font faces**, powered
 by the production [`mm-fonts-cdn`](https://github.com/21myatt/mm-fonts-cdn)
 catalog.
 
-**Live site:** <https://21myatt.github.io/open-source-fonts/>
+**Live site:** <https://21myatt.github.io/burmese-fonts-engine/>
 
 ## Features
 
@@ -52,9 +52,14 @@ Every push to `main` runs [the Pages workflow](./.github/workflows/deploy-pages.
 3. Upload only the generated `dist` directory.
 4. Deploy the artifact to GitHub Pages.
 
-The Vite base path is `/`. The app routes `/` to the Burmese Text Engine home
-and `/open-source-fonts` to the font browser. The production build also copies
-`dist/index.html` to
+The Vite base path is `/burmese-fonts-engine/`. The app routes `/` to the
+Burmese Text Engine home and `/open-source-fonts` to the font browser, producing
+these GitHub Pages URLs:
+
+- `https://21myatt.github.io/burmese-fonts-engine/`
+- `https://21myatt.github.io/burmese-fonts-engine/open-source-fonts`
+
+The production build also copies `dist/index.html` to
 `dist/404.html` so GitHub Pages can fall back to the SPA on direct route loads.
 No deployment secrets are required; the workflow uses GitHub's short-lived
 Pages identity token and repository-scoped permissions.

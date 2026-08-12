@@ -17,8 +17,15 @@ interface RouterContextValue {
 
 const RouterContext = createContext<RouterContextValue | null>(null);
 
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const appPath = (path: string) =>
+  basePath && path.startsWith(basePath) ? path.slice(basePath.length) || "/" : path;
+
+const browserPath = (path: RoutePath) => `${basePath}${path === "/" ? "/" : path}`;
+
 const normalizePath = (path: string): RoutePath =>
-  path === "/open-source-fonts" ? "/open-source-fonts" : "/";
+  appPath(path) === "/open-source-fonts" ? "/open-source-fonts" : "/";
 
 export function RouterProvider({ children }: { children: ReactNode }) {
   const [path, setPath] = useState<RoutePath>(() =>
@@ -32,8 +39,9 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const navigate = useCallback((nextPath: RoutePath) => {
-    if (window.location.pathname !== nextPath) {
-      window.history.pushState(null, "", nextPath);
+    const nextBrowserPath = browserPath(nextPath);
+    if (window.location.pathname !== nextBrowserPath) {
+      window.history.pushState(null, "", nextBrowserPath);
     }
     setPath(nextPath);
   }, []);

@@ -1,0 +1,19 @@
+/* User values modify the original preset layers; they do not replace them. */
+.word-art-page section.style-one .wordart .preview,
+.word-art-page section.style-two .wordart .preview,
+.word-art-page section.style-three .wordart .preview,
+.word-art-page section.style-four .wordart .preview,
+.word-art-page section.style-five .wordart .preview,
+.word-art-page section.style-seven .wordart .preview,
+.word-art-page section.style-ten .wordart .preview,
+.word-art-page section.style-thirteen .wordart .preview,
+.word-art-page section.style-sixteen .wordart .preview,
+.word-art-page section.style-nineteen .wordart .preview { color: var(--wordart-fill); -webkit-text-fill-color: var(--wordart-fill); -webkit-text-stroke-color: var(--wordart-outline); }
+
+.word-art-page section.style-three .wordart .preview { text-shadow: 3px 2px 0 var(--wordart-shadow); }
+.word-art-page section.style-four .wordart .preview { text-shadow: 2px 1px 0 var(--wordart-shadow); }
+.word-art-page section.style-five .wordart .preview::before { color: var(--wordart-shadow); -webkit-text-fill-color: var(--wordart-shadow); }
+.word-art-page section.style-six .wordart .preview::before { text-shadow: .125em .125em var(--wordart-shadow); }
+.word-art-page section.style-seven .wordart .preview::before { text-shadow: .094em .078em var(--wordart-shadow); }
+.word-art-page section.style-eight .wordart .preview::before,
+.word-art-page section.style-nine .wordart .preview::before { text-shadow: .094em .063em var(--wordart-shadow); }

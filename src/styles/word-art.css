@@ -1,0 +1,12 @@
+.word-art-page { position: relative; min-height: calc(100vh - 68px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px 32px 70px; background: #fff; text-align: center; overflow: hidden; }
+.word-art-page > section:first-child { position: relative; }
+.word-art-page .word-art-controls { width: 100%; }
+.word-art-page .container { width: min(20rem, 100%); margin: auto; padding: 0 1rem; }
+.word-art-page textarea, .word-art-page select { position: relative; z-index: 1; display: block; width: 100%; padding: .6rem 1rem; border: 1px solid #d1d1d1; background: transparent; box-shadow: none; font: inherit; font-size: .875rem; appearance: none; }
+.word-art-page select { margin-bottom: 1rem; background: #fff; }
+.word-art-page textarea { height: 4rem; resize: vertical; }
+.word-art-page textarea:focus, .word-art-page select:focus { outline: 0; border-color: #396fb9; box-shadow: 0 0 0 2px #b3cdf4; }
+.word-art-footer { position: absolute; right: 32px; bottom: 18px; left: 32px; width: auto; padding: 14px 0 0; border-top: 1px solid #eef0f3; color: #8a93a2; font-size: 12px; text-align: center; }
+.word-art-footer a { color: #667085; text-decoration: none; }
+.word-art-footer a:hover { text-decoration: underline; }
+@media (max-width: 640px) { .word-art-page { min-height: calc(100vh - 66px); padding: 20px 12px 64px; }.word-art-page .preview { font-size: 9vmin; }.word-art-footer { right: 12px; bottom: 12px; left: 12px; } }

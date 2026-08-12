@@ -1,0 +1,18 @@
+.app-shell { min-height: 100vh; }
+.topbar { height: 68px; position: sticky; top: 0; z-index: 50; display: grid; grid-template-columns: 260px minmax(260px, 520px) 1fr; align-items: center; gap: 24px; padding: 0 24px; background: rgba(255,255,255,.94); backdrop-filter: blur(18px); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0; border: 0; color: inherit; background: transparent; text-align: left; }
+.brand-mark { width: 36px; height: 36px; display: grid; place-items: center; color: white; background: #111; border-radius: 10px; font-weight: 700; }
+.brand strong, .brand small { display: block; }
+.brand strong { font-size: 16px; }
+.brand small { margin-top: 2px; color: #687386; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.search-box { height: 42px; display: flex; align-items: center; gap: 9px; padding: 0 13px; background: #f4f5f7; border: 1px solid #e1e4e9; border-radius: 13px; color: #8b95a6; }
+.search-box:focus-within { background: white; border-color: #b7c4db; box-shadow: 0 0 0 3px #eef3ff; }
+.search-box input { width: 100%; border: 0; outline: 0; background: transparent; color: #172033; }
+.search-box button, .header-actions a, .mobile-filter { display: grid; place-items: center; border: 0; background: transparent; color: #7a8495; padding: 6px; border-radius: 8px; }
+.header-actions { justify-self: end; display: flex; align-items: center; }
+.section-link { border: 0; padding: 7px 10px; color: #4c5a70; background: #f4f5f7; border-radius: 8px; font-size: 13px; font-weight: 650; }
+.mobile-filter { display: none; }
+.app-body { display: flex; align-items: flex-start; }
+.main-content { flex: 1; min-width: 0; padding: 24px 30px 40px; }
+footer { max-width: 1140px; margin: 30px auto 0; padding: 22px 0 0; border-top: 1px solid var(--line); color: #687386; font-size: 13px; line-height: 1.5; text-align: center; }
+footer p { margin: 0 0 7px; } footer a { display: inline-flex; align-items: center; gap: 4px; color: #526075; text-decoration: none; }

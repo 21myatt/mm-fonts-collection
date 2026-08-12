@@ -1,12 +1,12 @@
 {
-  "name": "mm-fonts-collection",
+  "name": "burmese-text-engine",
   "private": true,
-  "version": "1.0.0",
-  "description": "A searchable Myanmar Unicode font preview powered by the mm-fonts-cdn collection.",
+  "version": "1.0.1",
+  "description": "Burmese text tools, starting with an open source font browser powered by mm-fonts-cdn.",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -1,0 +1,14 @@
+:root { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172033; background: #f6f7f9; font-synthesis: none; --line: #e6e8ed; --muted: #667085; --blue: #2563eb; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, input, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a { color: inherit; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.skip-link { position: fixed; z-index: 200; top: 8px; left: 8px; transform: translateY(-150%); background: #111827; color: white; padding: 9px 13px; border-radius: 8px; }
+.skip-link:focus { transform: translateY(0); }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid rgba(37,99,235,.28); outline-offset: 2px; }
+.eyebrow { margin: 0 0 10px; color: #657186; font-size: 12px; line-height: 1.2; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }

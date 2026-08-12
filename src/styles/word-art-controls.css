@@ -22,3 +22,8 @@
 .word-art-page section.style-seven .wordart .preview::before { text-shadow: .094em .078em var(--wordart-shadow-control, #990000); }
 .word-art-page section.style-eight .wordart .preview::before { text-shadow: .094em .063em var(--wordart-shadow-control, #cdcdcd); }
 .word-art-page section.style-nine .wordart .preview::before { text-shadow: .094em .063em var(--wordart-shadow-control, #adadff); }
+
+/* Optional live extrusion layer. A depth of zero keeps the original CodePen layer intact. */
+.word-art-page .preview[style*="--wordart-layer-shadow"]::before {
+  text-shadow: var(--wordart-layer-shadow) !important;
+}

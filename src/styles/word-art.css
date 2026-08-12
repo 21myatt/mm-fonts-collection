@@ -261,38 +261,11 @@
   overflow: hidden;
 }
 
-.word-art-arc-source {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-.word-art-arc {
-  position: relative;
-  width: calc(var(--wordart-arc-radius) * 2);
-  height: calc(var(--wordart-arc-radius) * 1.25);
-  transform: translateY(calc(var(--wordart-arc-radius) * .22));
-}
-
-.word-art-arc > span {
-  position: absolute;
-  left: 50%;
-  top: 0;
+.word-art-arc-canvas {
   display: block;
-  transform-origin: 50% var(--wordart-arc-radius);
-  transform: translateX(-50%) rotate(calc((var(--wordart-arc-angle) / (var(--wordart-arc-count) - 1)) * var(--wordart-arc-index) - var(--wordart-arc-angle) / 2)) translateY(calc(var(--wordart-arc-radius) * -1));
-  font-family: var(--wordart-font, sans-serif);
-  font-size: clamp(28px, 6vw, 80px);
-  line-height: 1;
-  color: var(--wordart-fill, #000);
-  -webkit-text-stroke: var(--wordart-outline-width, 1px) var(--wordart-outline, #000);
-}
-
-.word-art-arc > span:first-child {
-  --wordart-arc-count: max(2, var(--wordart-arc-count));
+  max-width: min(82vw, 100%);
+  max-height: 72vh;
+  object-fit: contain;
 }
 
 .word-art-footer {

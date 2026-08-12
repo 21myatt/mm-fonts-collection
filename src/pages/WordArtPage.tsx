@@ -48,10 +48,14 @@ function WordArtPage() {
             {(preset === "three" || preset === "four") && <><RangeControl label="Shadow X" value={config.shadowX} min={-20} max={20} onChange={control("shadowX")} /><RangeControl label="Shadow Y" value={config.shadowY} min={-20} max={20} onChange={control("shadowY")} /></>}
             {(["six", "eight", "nine", "eleven", "twelve", "fourteen", "fifteen", "seventeen", "eighteen", "twenty", "twentyone", "twentytwo"] as WordArtPreset[]).includes(preset) && <>
               <label className="word-art-toggle"><input type="checkbox" checked={config.gradientEnabled} onChange={(event) => update("gradientEnabled", event.target.checked)} /> Gradient / texture</label>
-              {config.gradientEnabled && (preset === "six" || preset === "eight") && <>
+              {config.gradientEnabled && <>
+                <label className="word-art-toggle"><input type="checkbox" checked={config.gradientCustom} onChange={(event) => update("gradientCustom", event.target.checked)} /> Edit gradient colors</label>
+                {config.gradientCustom && <>
                 <ColorControl label="Gradient start" value={config.gradientStart} onChange={control("gradientStart")} />
+                <ColorControl label="Gradient middle" value={config.gradientMiddle} onChange={control("gradientMiddle")} />
                 <ColorControl label="Gradient end" value={config.gradientEnd} onChange={control("gradientEnd")} />
                 <RangeControl label="Gradient angle" value={config.gradientAngle} min={0} max={360} onChange={control("gradientAngle")} />
+                </>}
               </>}
             </>}
           </section>
@@ -75,7 +79,10 @@ function WordArtPage() {
               <RangeControl label="Shadow depth" value={config.shadowDepth} min={0} max={30} onChange={control("shadowDepth")} />
               <RangeControl label="Shadow opacity" value={config.shadowOpacity * 100} min={0} max={100} onChange={(value) => update("shadowOpacity", value / 100)} />
               <RangeControl label="Texture size" value={config.textureSize} min={25} max={300} onChange={control("textureSize")} />
-              <RangeControl label="Texture angle" value={config.textureAngle} min={0} max={100} onChange={control("textureAngle")} />
+        <RangeControl label="Texture angle" value={config.textureAngle} min={0} max={100} onChange={control("textureAngle")} />
+        <RangeControl label="Layer depth" value={config.layerDepth} min={0} max={30} onChange={control("layerDepth")} />
+        <RangeControl label="Layer angle" value={config.layerAngle} min={-180} max={180} onChange={control("layerAngle")} />
+        <RangeControl label="Bevel softness" value={config.bevel} min={0} max={12} onChange={control("bevel")} />
               <label className="word-art-toggle"><input type="checkbox" checked={config.arcEnabled} onChange={(event) => update("arcEnabled", event.target.checked)} /> Arc text</label>
               {config.arcEnabled && <>
                 <RangeControl label="Arc radius" value={config.arcRadius} min={80} max={600} onChange={control("arcRadius")} />

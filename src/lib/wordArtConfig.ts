@@ -11,6 +11,8 @@ export interface WordArtEditorConfig {
   gradientStart: string;
   gradientEnd: string;
   gradientAngle: number;
+  gradientCustom: boolean;
+  gradientMiddle: string;
   fontSize: number;
   fontWeight: number;
   fontStyle: "normal" | "italic";
@@ -32,6 +34,9 @@ export interface WordArtEditorConfig {
   arcEnabled: boolean;
   arcRadius: number;
   arcAngle: number;
+  layerDepth: number;
+  layerAngle: number;
+  bevel: number;
 }
 
 const defaults: Record<WordArtPreset, Partial<WordArtEditorConfig>> = {
@@ -52,5 +57,5 @@ const defaults: Record<WordArtPreset, Partial<WordArtEditorConfig>> = {
 };
 
 export function defaultWordArtConfig(preset: WordArtPreset): WordArtEditorConfig {
-  return { fill: "#ffffff", outline: "#000000", shadow: "#999999", rotation: 0, shadowX: 0, shadowY: 0, gradientEnabled: false, gradientStart: "#ffffff", gradientEnd: "#000000", gradientAngle: 180, fontSize: 0, fontWeight: 0, fontStyle: "normal", letterSpacing: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, perspective: 0, translateX: 0, translateY: 0, rotateX: 0, rotateY: 0, rotateZ: 0, shadowDepth: 1, shadowOpacity: 1, textureSize: 100, textureAngle: 0, arcEnabled: false, arcRadius: 240, arcAngle: 120, ...defaults[preset] };
+  return { fill: "#ffffff", outline: "#000000", shadow: "#999999", rotation: 0, shadowX: 0, shadowY: 0, gradientEnabled: false, gradientStart: "#ffffff", gradientMiddle: "#ffffff", gradientEnd: "#000000", gradientAngle: 180, gradientCustom: false, fontSize: 0, fontWeight: 0, fontStyle: "normal", letterSpacing: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, perspective: 0, translateX: 0, translateY: 0, rotateX: 0, rotateY: 0, rotateZ: 0, shadowDepth: 1, shadowOpacity: 1, textureSize: 100, textureAngle: 0, arcEnabled: false, arcRadius: 240, arcAngle: 120, layerDepth: 0, layerAngle: 45, bevel: 0, ...defaults[preset] };
 }

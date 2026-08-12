@@ -1,12 +1,358 @@
-.word-art-page { position: relative; min-height: calc(100vh - 68px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px 32px 70px; background: #fff; text-align: center; overflow: hidden; }
-.word-art-page > section:first-child { position: relative; }
-.word-art-page .word-art-controls { width: 100%; }
-.word-art-page .container { width: min(20rem, 100%); margin: auto; padding: 0 1rem; }
-.word-art-page textarea, .word-art-page select { position: relative; z-index: 1; display: block; width: 100%; padding: .6rem 1rem; border: 1px solid #d1d1d1; background: transparent; box-shadow: none; font: inherit; font-size: .875rem; appearance: none; }
-.word-art-page select { margin-bottom: 1rem; background: #fff; }
-.word-art-page textarea { height: 4rem; resize: vertical; }
-.word-art-page textarea:focus, .word-art-page select:focus { outline: 0; border-color: #396fb9; box-shadow: 0 0 0 2px #b3cdf4; }
-.word-art-footer { position: absolute; right: 32px; bottom: 18px; left: 32px; width: auto; padding: 14px 0 0; border-top: 1px solid #eef0f3; color: #8a93a2; font-size: 12px; text-align: center; }
-.word-art-footer a { color: #667085; text-decoration: none; }
-.word-art-footer a:hover { text-decoration: underline; }
-@media (max-width: 640px) { .word-art-page { min-height: calc(100vh - 66px); padding: 20px 12px 64px; }.word-art-page .preview { font-size: 9vmin; }.word-art-footer { right: 12px; bottom: 12px; left: 12px; } }
+.word-art-page.word-art-workbench {
+  position: relative;
+  width: 100%;
+  height: calc(100dvh - 68px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+
+.word-art-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+.word-art-sidebar,
+.word-art-canvas {
+  min-height: 0;
+}
+
+.word-art-sidebar {
+  width: min(360px, 32vw);
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  text-align: left;
+  flex: 0 0 min(360px, 32vw);
+  border-right: 1px solid #eef0f3;
+  display: flex;
+}
+
+.word-art-sidebar-inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  padding: 24px;
+}
+
+.word-art-panel,
+.word-art-advanced {
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.word-art-panel {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.word-art-page.word-art-workbench textarea,
+.word-art-page.word-art-workbench select {
+  width: 100%;
+  margin: 0;
+  padding: .6rem 1rem;
+  border: 1px solid #d1d1d1;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  font: inherit;
+  font-size: 0.93rem;
+  appearance: none;
+}
+
+.word-art-page.word-art-workbench textarea {
+  min-height: 4rem;
+  resize: vertical;
+}
+
+.word-art-page.word-art-workbench textarea:focus,
+.word-art-page.word-art-workbench select:focus {
+  outline: 0;
+  border-color: #396fb9;
+  box-shadow: 0 0 0 2px #b3cdf4;
+}
+
+.word-art-page.word-art-workbench textarea {
+  white-space: pre-wrap;
+}
+
+.word-art-color-control {
+  display: grid;
+  gap: 7px;
+  color: #667085;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.word-art-color-control span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.word-art-color-control input {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #d1d1d1;
+  border-radius: 0;
+  background: transparent;
+}
+
+.word-art-color-control code {
+  color: #667085;
+  font-size: 0.7rem;
+}
+
+.word-art-range-control {
+  display: grid;
+  gap: 7px;
+  color: #667085;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.word-art-range-control span {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.word-art-range-control strong {
+  color: #172033;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.word-art-range-control input {
+  width: 100%;
+  accent-color: #667085;
+}
+
+.word-art-select-control {
+  display: grid;
+  gap: 7px;
+  color: #667085;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.word-art-select-control textarea {
+  min-height: 4rem;
+}
+
+.word-art-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #667085;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.word-art-toggle input {
+  accent-color: #667085;
+}
+
+.word-art-advanced {
+  display: grid;
+  gap: 0;
+}
+
+.word-art-advanced summary {
+  padding: 1rem 0;
+  cursor: pointer;
+  list-style: none;
+  color: #172033;
+  font-weight: 700;
+  border-top: 1px solid #eef0f3;
+}
+
+.word-art-advanced summary::-webkit-details-marker {
+  display: none;
+}
+
+.word-art-advanced > div {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 0.25rem;
+}
+
+.word-art-export {
+  width: 100%;
+  padding: .65rem .8rem;
+  border: 1px solid #d1d1d1;
+  border-radius: 0;
+  color: #526075;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 400;
+}
+
+.word-art-export:hover {
+  border-color: #bfc7d4;
+}
+
+.word-art-canvas {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  height: 100%;
+}
+
+.word-art-canvas-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  overflow: hidden;
+}
+
+.word-art-canvas-label {
+  display: none;
+}
+
+.word-art-preview-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0;
+}
+
+.word-art-preview-stage > section {
+  position: relative;
+}
+
+.word-art-preview-stage .preview {
+  transform-origin: center;
+}
+
+.word-art-page.word-art-workbench .preview.live-gradient {
+  background: var(--live-wordart-gradient) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-color: transparent !important;
+}
+
+.word-art-arc-stage {
+  position: relative;
+  overflow: hidden;
+}
+
+.word-art-arc-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.word-art-arc {
+  position: relative;
+  width: calc(var(--wordart-arc-radius) * 2);
+  height: calc(var(--wordart-arc-radius) * 1.25);
+  transform: translateY(calc(var(--wordart-arc-radius) * .22));
+}
+
+.word-art-arc > span {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  display: block;
+  transform-origin: 50% var(--wordart-arc-radius);
+  transform: translateX(-50%) rotate(calc((var(--wordart-arc-angle) / (var(--wordart-arc-count) - 1)) * var(--wordart-arc-index) - var(--wordart-arc-angle) / 2)) translateY(calc(var(--wordart-arc-radius) * -1));
+  font-family: var(--wordart-font, sans-serif);
+  font-size: clamp(28px, 6vw, 80px);
+  line-height: 1;
+  color: var(--wordart-fill, #000);
+  -webkit-text-stroke: var(--wordart-outline-width, 1px) var(--wordart-outline, #000);
+}
+
+.word-art-arc > span:first-child {
+  --wordart-arc-count: max(2, var(--wordart-arc-count));
+}
+
+.word-art-footer {
+  flex: 0 0 auto;
+  padding: 10px 0 12px;
+  border-top: 1px solid rgba(24, 32, 49, 0.12);
+  color: #8a93a2;
+  font-size: 12px;
+  text-align: center;
+  background: #fff;
+  width: 100%;
+}
+
+.word-art-footer a {
+  color: #667085;
+  text-decoration: none;
+}
+
+.word-art-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 1100px) {
+  .word-art-page.word-art-workbench {
+    width: 100%;
+  }
+
+  .word-art-sidebar {
+    width: 300px;
+    flex-basis: 300px;
+  }
+
+  .word-art-sidebar-inner {
+    padding-right: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .word-art-page.word-art-workbench {
+    height: calc(100dvh - 66px);
+  }
+
+  .word-art-body {
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .word-art-sidebar {
+    width: 100%;
+    flex-basis: auto;
+    border-right: 0;
+    border-bottom: 1px solid #eef0f3;
+    height: 42vh;
+  }
+
+  .word-art-sidebar-inner {
+    padding-right: 0;
+  }
+
+  .word-art-canvas {
+    min-height: 58vh;
+  }
+}

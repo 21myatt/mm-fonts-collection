@@ -17,3 +17,8 @@
 .word-art-page section.style-seven .wordart .preview::before { text-shadow: .094em .078em var(--wordart-shadow); }
 .word-art-page section.style-eight .wordart .preview::before,
 .word-art-page section.style-nine .wordart .preview::before { text-shadow: .094em .063em var(--wordart-shadow); }
+.word-art-page section.style-five .wordart .preview::before { color: var(--wordart-shadow-control, #9999ff); -webkit-text-fill-color: var(--wordart-shadow-control, #9999ff); }
+.word-art-page section.style-six .wordart .preview::before { text-shadow: .125em .125em var(--wordart-shadow-control, #717171); }
+.word-art-page section.style-seven .wordart .preview::before { text-shadow: .094em .078em var(--wordart-shadow-control, #990000); }
+.word-art-page section.style-eight .wordart .preview::before { text-shadow: .094em .063em var(--wordart-shadow-control, #cdcdcd); }
+.word-art-page section.style-nine .wordart .preview::before { text-shadow: .094em .063em var(--wordart-shadow-control, #adadff); }

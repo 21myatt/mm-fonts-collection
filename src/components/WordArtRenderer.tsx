@@ -12,6 +12,7 @@ const colorWithAlpha = (color: string, alpha: number) => {
 export default function WordArtRenderer({ preset, text, fontFamily, config, plain = false }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtConfig; plain?: boolean }) {
   const { textStyle, advancedStyle, sectionStyle, gradient } = createWordArtStyle({ preset, config, fontFamily });
   const sectionClassName = plain ? "word-art-plain" : `style-${preset}`;
+  const previewClassName = ["preview", gradient ? "live-gradient" : "", config.outlineEnabled && config.outlinePaint === "gradient" ? "live-stroke-gradient" : ""].filter(Boolean).join(" ");
   if (config.arcEnabled) {
     return <div className="word-art-preview-stage word-art-arc-stage" style={{ ["--wordart-arc-radius" as string]: `${config.arcRadius}px`, ["--wordart-arc-angle" as string]: `${config.arcAngle}deg` } as CSSProperties}>
       <section className={sectionClassName} style={sectionStyle as CSSProperties | undefined}>
@@ -19,7 +20,7 @@ export default function WordArtRenderer({ preset, text, fontFamily, config, plai
       </section>
     </div>;
   }
-  return <div className="word-art-preview-stage"><section className={sectionClassName} style={sectionStyle as CSSProperties | undefined}><div className="wordart"><h1 className={gradient ? "preview live-gradient" : "preview"} data-content={text} style={{ ...textStyle, ...advancedStyle } as CSSProperties}>{text}</h1></div></section></div>;
+  return <div className="word-art-preview-stage"><section className={sectionClassName} style={sectionStyle as CSSProperties | undefined}><div className="wordart"><h1 className={previewClassName} data-content={text} style={{ ...textStyle, ...advancedStyle } as CSSProperties}>{text}</h1></div></section></div>;
 }
 
 function WordArtArcCanvas({ preset, text, fontFamily, config, gradient }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtConfig; gradient?: string }) {
@@ -61,23 +62,31 @@ function WordArtArcCanvas({ preset, text, fontFamily, config, gradient }: { pres
     measureContext.shadowOffsetY = config.shadowEnabled ? config.shadowY : 0;
 
     const baseline = padding + ascent;
-    const fill = gradient && gradient.startsWith("linear-gradient")
+    const fillGradient = config.fillPaint === "gradient" && config.gradientType === "linear"
       ? measureContext.createLinearGradient(padding, 0, padding + textWidth, 0)
       : null;
-    if (fill) {
-      fill.addColorStop(0, config.gradientStart);
-      if (config.gradientCustom) fill.addColorStop(0.5, config.gradientMiddle);
-      fill.addColorStop(1, config.gradientEnd);
+    if (fillGradient) {
+      fillGradient.addColorStop(0, config.gradientStart);
+      if (config.gradientCustom) fillGradient.addColorStop(0.5, config.gradientMiddle);
+      fillGradient.addColorStop(1, config.gradientEnd);
+    }
+    const strokeGradient = config.outlinePaint === "gradient" && config.outlineGradientType === "linear"
+      ? measureContext.createLinearGradient(padding, 0, padding + textWidth, 0)
+      : null;
+    if (strokeGradient) {
+      strokeGradient.addColorStop(0, config.outlineGradientStart);
+      if (config.gradientCustom) strokeGradient.addColorStop(0.5, config.outlineGradientMiddle);
+      strokeGradient.addColorStop(1, config.outlineGradientEnd);
     }
     if (config.outlineEnabled && config.outline !== "transparent" && config.outlineWidth > 0 && config.outlineOpacity > 0) {
       measureContext.globalAlpha = config.outlineOpacity;
-      measureContext.strokeStyle = config.outline;
+      measureContext.strokeStyle = strokeGradient || config.outline;
       measureContext.lineWidth = config.outlineWidth;
       measureContext.strokeText(text, padding, baseline);
     }
     if (config.fillEnabled && config.fillOpacity > 0) {
       measureContext.globalAlpha = config.fillOpacity;
-      measureContext.fillStyle = fill || config.fill;
+      measureContext.fillStyle = fillGradient || config.fill;
       measureContext.fillText(text, padding, baseline);
     }
     measureContext.globalAlpha = 1;

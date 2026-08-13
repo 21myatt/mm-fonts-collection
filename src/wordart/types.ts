@@ -21,10 +21,17 @@ export interface WordArtPresetStyle {
 
 export interface WordArtConfig {
   fillEnabled: boolean;
+  fillPaint: "solid" | "gradient";
   fillOpacity: number;
   outlineEnabled: boolean;
+  outlinePaint: "solid" | "gradient";
   outlineWidth: number;
   outlineOpacity: number;
+  outlineGradientStart: string;
+  outlineGradientMiddle: string;
+  outlineGradientEnd: string;
+  outlineGradientAngle: number;
+  outlineGradientType: "linear" | "radial";
   shadowEnabled: boolean;
   depthEnabled: boolean;
   depthColor: string;
@@ -38,6 +45,7 @@ export interface WordArtConfig {
   gradientStart: string;
   gradientEnd: string;
   gradientAngle: number;
+  gradientType: "linear" | "radial";
   gradientCustom: boolean;
   gradientMiddle: string;
   fontSize: number;
@@ -75,11 +83,13 @@ export interface WordArtLayerStyle {
   };
   fill: {
     enabled: boolean;
+    paint: "solid" | "gradient";
     color: string;
     opacity: number;
   };
   stroke: {
     enabled: boolean;
+    paint: "solid" | "gradient";
     color: string;
     width: number;
     opacity: number;
@@ -99,8 +109,17 @@ export interface WordArtLayerStyle {
     middle: string;
     end: string;
     angle: number;
+    type: "linear" | "radial";
     textureSize: number;
     texturePosition: number;
+  };
+  strokeGradientOverlay: {
+    enabled: boolean;
+    start: string;
+    middle: string;
+    end: string;
+    angle: number;
+    type: "linear" | "radial";
   };
   transform: {
     rotation: number;

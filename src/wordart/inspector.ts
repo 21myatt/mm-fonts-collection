@@ -1,7 +1,5 @@
 import type { WordArtConfig, WordArtPreset } from "./types";
 
-export const gradientWordArtPresets: WordArtPreset[] = ["six", "eight", "nine", "eleven", "twelve", "fourteen", "fifteen", "seventeen", "eighteen", "twenty", "twentyone", "twentytwo"];
-
 export type WordArtInspectorContext = { preset: WordArtPreset; config: WordArtConfig };
 export type WordArtInspectorControl =
   | { type: "textarea"; label: string }
@@ -28,12 +26,24 @@ export const wordArtInspectorGroups: { title: string; open?: boolean; visible?: 
   ] },
   { title: "Fill", open: true, controls: [
     { type: "toggle", key: "fillEnabled", label: "Fill" },
-    { type: "color", key: "fill", label: "Color", visible: ({ config }) => config.fillEnabled },
+    { type: "select", key: "fillPaint", label: "Paint", options: [{ label: "Solid", value: "solid" }, { label: "Gradient", value: "gradient" }], visible: ({ config }) => config.fillEnabled },
+    { type: "color", key: "fill", label: "Color", visible: ({ config }) => config.fillEnabled && config.fillPaint === "solid" },
+    { type: "select", key: "gradientType", label: "Gradient type", options: [{ label: "Linear", value: "linear" }, { label: "Radial", value: "radial" }], visible: ({ config }) => config.fillEnabled && config.fillPaint === "gradient" },
+    { type: "color", key: "gradientStart", label: "Gradient start", visible: ({ config }) => config.fillEnabled && config.fillPaint === "gradient" },
+    { type: "color", key: "gradientMiddle", label: "Gradient middle", visible: ({ config }) => config.fillEnabled && config.fillPaint === "gradient" },
+    { type: "color", key: "gradientEnd", label: "Gradient end", visible: ({ config }) => config.fillEnabled && config.fillPaint === "gradient" },
+    { type: "range", key: "gradientAngle", label: "Gradient angle", min: 0, max: 360, suffix: "deg", visible: ({ config }) => config.fillEnabled && config.fillPaint === "gradient" && config.gradientType === "linear" },
     { type: "range", key: "fillOpacity", label: "Opacity", min: 0, max: 100, scale: 100, suffix: "%", visible: ({ config }) => config.fillEnabled },
   ] },
   { title: "Stroke", open: true, controls: [
     { type: "toggle", key: "outlineEnabled", label: "Stroke" },
-    { type: "color", key: "outline", label: "Color", visible: ({ config }) => config.outlineEnabled },
+    { type: "select", key: "outlinePaint", label: "Paint", options: [{ label: "Solid", value: "solid" }, { label: "Gradient", value: "gradient" }], visible: ({ config }) => config.outlineEnabled },
+    { type: "color", key: "outline", label: "Color", visible: ({ config }) => config.outlineEnabled && config.outlinePaint === "solid" },
+    { type: "select", key: "outlineGradientType", label: "Gradient type", options: [{ label: "Linear", value: "linear" }, { label: "Radial", value: "radial" }], visible: ({ config }) => config.outlineEnabled && config.outlinePaint === "gradient" },
+    { type: "color", key: "outlineGradientStart", label: "Gradient start", visible: ({ config }) => config.outlineEnabled && config.outlinePaint === "gradient" },
+    { type: "color", key: "outlineGradientMiddle", label: "Gradient middle", visible: ({ config }) => config.outlineEnabled && config.outlinePaint === "gradient" },
+    { type: "color", key: "outlineGradientEnd", label: "Gradient end", visible: ({ config }) => config.outlineEnabled && config.outlinePaint === "gradient" },
+    { type: "range", key: "outlineGradientAngle", label: "Gradient angle", min: 0, max: 360, suffix: "deg", visible: ({ config }) => config.outlineEnabled && config.outlinePaint === "gradient" && config.outlineGradientType === "linear" },
     { type: "range", key: "outlineWidth", label: "Weight", min: 0, max: 24, step: 0.1, suffix: "px", visible: ({ config }) => config.outlineEnabled },
     { type: "range", key: "outlineOpacity", label: "Opacity", min: 0, max: 100, scale: 100, suffix: "%", visible: ({ config }) => config.outlineEnabled },
   ] },
@@ -63,16 +73,6 @@ export const wordArtInspectorGroups: { title: string; open?: boolean; visible?: 
     { type: "range", key: "layerDepth", label: "Size", min: 0, max: 100, suffix: "px", visible: ({ config }) => config.depthEnabled },
     { type: "range", key: "layerAngle", label: "Angle", min: -180, max: 180, suffix: "deg", visible: ({ config }) => config.depthEnabled },
     { type: "range", key: "bevel", label: "Softness", min: 0, max: 12, suffix: "px", visible: ({ config }) => config.depthEnabled },
-  ] },
-  { title: "Gradient", visible: ({ preset }) => gradientWordArtPresets.includes(preset), controls: [
-    { type: "toggle", key: "gradientEnabled", label: "Gradient / texture" },
-    { type: "toggle", key: "gradientCustom", label: "Edit gradient colors", visible: ({ config }) => config.gradientEnabled },
-    { type: "color", key: "gradientStart", label: "Gradient start", visible: ({ config }) => config.gradientEnabled && config.gradientCustom },
-    { type: "color", key: "gradientMiddle", label: "Gradient middle", visible: ({ config }) => config.gradientEnabled && config.gradientCustom },
-    { type: "color", key: "gradientEnd", label: "Gradient end", visible: ({ config }) => config.gradientEnabled && config.gradientCustom },
-    { type: "range", key: "gradientAngle", label: "Gradient angle", min: 0, max: 360, suffix: "deg", visible: ({ config }) => config.gradientEnabled && config.gradientCustom },
-    { type: "range", key: "textureSize", label: "Texture size", min: 25, max: 300, suffix: "%" },
-    { type: "range", key: "textureAngle", label: "Texture angle", min: 0, max: 100, suffix: "%" },
   ] },
   { title: "Arc", controls: [
     { type: "toggle", key: "arcEnabled", label: "Arc text" },

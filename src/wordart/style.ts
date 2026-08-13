@@ -3,17 +3,26 @@ import { createWordArtLayerStyle } from "./layerStyle";
 import type { WordArtRenderInput, WordArtStyleModel } from "./types";
 
 const withAlpha = (color: string, opacity: number) => opacity >= 1 ? color : `color-mix(in srgb, ${color} ${Math.round(opacity * 100)}%, transparent)`;
+const createGradient = ({ type, angle, start, middle, end }: { type: "linear" | "radial"; angle: number; start: string; middle: string; end: string }) =>
+  type === "radial"
+    ? `radial-gradient(ellipse at center, ${start}, ${middle} 50%, ${end})`
+    : `linear-gradient(${angle}deg, ${start}, ${middle} 50%, ${end})`;
 
 export function createWordArtStyle({ preset, config, fontFamily }: WordArtRenderInput): WordArtStyleModel {
   const layerStyle = createWordArtLayerStyle(config);
   const texture = WORD_ART_PRESET_STYLES[preset].texture;
-  const customGradient = `linear-gradient(${layerStyle.gradientOverlay.angle}deg, ${layerStyle.gradientOverlay.start}, ${layerStyle.gradientOverlay.middle} 50%, ${layerStyle.gradientOverlay.end})`;
-  const gradient = texture && layerStyle.gradientOverlay.enabled
-    ? preset === "six"
-      ? `linear-gradient(${layerStyle.gradientOverlay.angle}deg, ${layerStyle.gradientOverlay.start}, ${layerStyle.gradientOverlay.end})`
-      : preset === "eight"
-        ? `radial-gradient(ellipse at center, ${layerStyle.gradientOverlay.start}, ${layerStyle.gradientOverlay.end})`
-        : layerStyle.gradientOverlay.custom ? customGradient : texture
+  const customGradient = createGradient(layerStyle.gradientOverlay);
+  const strokeCustomGradient = createGradient(layerStyle.strokeGradientOverlay);
+  const fillGradient = layerStyle.fill.enabled && layerStyle.fill.paint === "gradient";
+  const strokeGradient = layerStyle.stroke.enabled && layerStyle.stroke.paint === "gradient";
+  const gradient = fillGradient
+    ? layerStyle.gradientOverlay.custom || !texture
+      ? customGradient
+      : preset === "six"
+        ? `linear-gradient(${layerStyle.gradientOverlay.angle}deg, ${layerStyle.gradientOverlay.start}, ${layerStyle.gradientOverlay.end})`
+        : preset === "eight"
+          ? `radial-gradient(ellipse at center, ${layerStyle.gradientOverlay.start}, ${layerStyle.gradientOverlay.end})`
+          : texture
     : undefined;
   const layerShadow = layerStyle.depth.enabled && layerStyle.depth.layerDepth > 0
     ? Array.from({ length: Math.max(1, Math.round(layerStyle.depth.layerDepth)) }, (_, index) => {
@@ -35,9 +44,10 @@ export function createWordArtStyle({ preset, config, fontFamily }: WordArtRender
       fontFamily: fontFamily ? `"${fontFamily}", sans-serif` : undefined,
       color: layerStyle.fill.enabled ? withAlpha(layerStyle.fill.color, layerStyle.fill.opacity) : "transparent",
       WebkitTextFillColor: gradient ? "transparent" : layerStyle.fill.enabled ? withAlpha(layerStyle.fill.color, layerStyle.fill.opacity) : "transparent",
-      ...(layerStyle.stroke.enabled ? { WebkitTextStrokeWidth: `${layerStyle.stroke.width}px`, WebkitTextStrokeColor: withAlpha(layerStyle.stroke.color, layerStyle.stroke.opacity) } : { WebkitTextStrokeWidth: 0, WebkitTextStrokeColor: "transparent" }),
+      ...(layerStyle.stroke.enabled && !strokeGradient ? { WebkitTextStrokeWidth: `${layerStyle.stroke.width}px`, WebkitTextStrokeColor: withAlpha(layerStyle.stroke.color, layerStyle.stroke.opacity) } : { WebkitTextStrokeWidth: 0, WebkitTextStrokeColor: "transparent" }),
       ...(textShadow ? { textShadow } : {}),
       ...(gradient ? { "--live-wordart-gradient": gradient, backgroundSize: `${layerStyle.gradientOverlay.textureSize}% ${layerStyle.gradientOverlay.textureSize}%`, backgroundPosition: `${layerStyle.gradientOverlay.texturePosition}% 50%`, WebkitBackgroundClip: "text", backgroundClip: "text", backgroundColor: "transparent", WebkitTextFillColor: "transparent" } : {}),
+      ...(strokeGradient ? { "--live-wordart-stroke-gradient": strokeCustomGradient, "--live-wordart-stroke-width": `${layerStyle.stroke.width}px`, "--live-wordart-stroke-opacity": layerStyle.stroke.opacity } : {}),
     },
     advancedStyle: {
       ...(hasAdvancedTransform ? { transform: advancedTransform } : {}),

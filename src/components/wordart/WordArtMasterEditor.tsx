@@ -24,7 +24,7 @@ export default function WordArtMasterEditor({ preset, text, setText, config, upd
 
   return <main className="word-art-page word-art-workbench">
     <div className="word-art-header">
-      <a className="word-art-mode-link" href="./word-art?mode=presets">Back to presets</a>
+      <a className="word-art-mode-link" href="./word-art?mode=presets_kathykato">Back to presets</a>
     </div>
     <div className="word-art-body">
       <section className="word-art-canvas" aria-label="Live preview">

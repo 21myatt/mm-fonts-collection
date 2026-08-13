@@ -12,13 +12,14 @@ const initialPreset = (): WordArtPreset => {
 
 function WordArtPage() {
   const mode = new URLSearchParams(window.location.search).get("mode");
+  const isPresetMode = mode === "presets_kathykato";
   const [preset, setPreset] = useState<WordArtPreset>(() => initialPreset());
   const [text, setText] = useState("မင်္ဂလာပါ ခင်ဗျ");
-  const { config, update } = useWordArtEditor(preset, mode === "presets");
+  const { config, update } = useWordArtEditor(preset, isPresetMode);
   const { fonts, selectedFontId, setSelectedFontId, fontFamily, loading } = useWordArtFonts();
   const selectedFont = fonts.find((font) => font.id === selectedFontId);
 
-  if (mode === "presets") {
+  if (isPresetMode) {
     return <WordArtPresetMode text={text} setText={setText} preset={preset} setPreset={setPreset} fonts={fonts} selectedFontId={selectedFontId} setSelectedFontId={setSelectedFontId} fontFamily={fontFamily} loading={loading} />;
   }
 

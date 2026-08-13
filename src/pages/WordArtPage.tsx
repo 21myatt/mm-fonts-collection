@@ -16,12 +16,13 @@ function WordArtPage() {
   const [text, setText] = useState("မင်္ဂလာပါ ခင်ဗျ");
   const { config, update } = useWordArtEditor(preset, mode === "presets");
   const { fonts, selectedFontId, setSelectedFontId, fontFamily, loading } = useWordArtFonts();
+  const selectedFont = fonts.find((font) => font.id === selectedFontId);
 
   if (mode === "presets") {
     return <WordArtPresetMode text={text} setText={setText} preset={preset} setPreset={setPreset} fonts={fonts} selectedFontId={selectedFontId} setSelectedFontId={setSelectedFontId} fontFamily={fontFamily} loading={loading} />;
   }
 
-  return <WordArtMasterEditor preset={preset} text={text} setText={setText} config={config} update={update} fonts={fonts} selectedFontId={selectedFontId} setSelectedFontId={setSelectedFontId} fontFamily={fontFamily} loading={loading} />;
+  return <WordArtMasterEditor preset={preset} text={text} setText={setText} config={config} update={update} fonts={fonts} selectedFont={selectedFont} selectedFontId={selectedFontId} setSelectedFontId={setSelectedFontId} fontFamily={fontFamily} loading={loading} />;
 }
 
 export default WordArtPage;

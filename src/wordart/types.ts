@@ -67,8 +67,11 @@ export interface WordArtConfig {
   textureSize: number;
   textureAngle: number;
   arcEnabled: boolean;
+  arcOrientation: "horizontal" | "vertical";
   arcRadius: number;
   arcAngle: number;
+  arcHorizontalDistortion: number;
+  arcVerticalDistortion: number;
   layerDepth: number;
   layerAngle: number;
   bevel: number;
@@ -143,8 +146,11 @@ export interface WordArtLayerStyle {
   };
   arc: {
     enabled: boolean;
+    orientation: "horizontal" | "vertical";
     radius: number;
     angle: number;
+    horizontalDistortion: number;
+    verticalDistortion: number;
   };
 }
 

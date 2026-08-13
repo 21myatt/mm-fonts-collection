@@ -1,5 +1,6 @@
 import WordArtRenderer from "../WordArtRenderer";
 import { exportWordArtCss, exportWordArtLayerStyleJson, type WordArtConfig, type WordArtPreset } from "../../wordart";
+import type { FontEntry } from "../../types";
 import WordArtInspector from "./WordArtInspector";
 import type { WordArtConfigUpdate, WordArtFontOption } from "./WordArtInspectorControls";
 
@@ -10,13 +11,14 @@ type WordArtMasterEditorProps = {
   config: WordArtConfig;
   update: WordArtConfigUpdate;
   fonts: WordArtFontOption[];
+  selectedFont?: FontEntry;
   selectedFontId: string;
   setSelectedFontId: (value: string) => void;
   fontFamily: string;
   loading: boolean;
 };
 
-export default function WordArtMasterEditor({ preset, text, setText, config, update, fonts, selectedFontId, setSelectedFontId, fontFamily, loading }: WordArtMasterEditorProps) {
+export default function WordArtMasterEditor({ preset, text, setText, config, update, fonts, selectedFont, selectedFontId, setSelectedFontId, fontFamily, loading }: WordArtMasterEditorProps) {
   const copyCss = () => navigator.clipboard.writeText(exportWordArtCss({ preset, config, fontFamily }));
   const copyJson = () => navigator.clipboard.writeText(exportWordArtLayerStyleJson(config));
 
@@ -27,7 +29,7 @@ export default function WordArtMasterEditor({ preset, text, setText, config, upd
     <div className="word-art-body">
       <section className="word-art-canvas" aria-label="Live preview">
         <div className="word-art-canvas-shell">
-          <WordArtRenderer preset={preset} text={text} fontFamily={fontFamily} config={config} plain />
+          <WordArtRenderer preset={preset} text={text} fontFamily={fontFamily} fontEntry={selectedFont} config={config} plain />
         </div>
       </section>
 

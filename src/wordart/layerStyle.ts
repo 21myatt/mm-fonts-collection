@@ -65,8 +65,11 @@ export function createWordArtLayerStyle(config: WordArtConfig): WordArtLayerStyl
     },
     arc: {
       enabled: config.arcEnabled,
+      orientation: config.arcOrientation,
       radius: config.arcRadius,
       angle: config.arcAngle,
+      horizontalDistortion: config.arcHorizontalDistortion,
+      verticalDistortion: config.arcVerticalDistortion,
     },
   };
 }
@@ -130,8 +133,11 @@ export function applyWordArtLayerStyle(config: WordArtConfig, layerStyle: Partia
     } : {}),
     ...(layerStyle.arc ? {
       arcEnabled: layerStyle.arc.enabled ?? config.arcEnabled,
+      arcOrientation: layerStyle.arc.orientation ?? config.arcOrientation,
       arcRadius: layerStyle.arc.radius ?? config.arcRadius,
       arcAngle: layerStyle.arc.angle ?? config.arcAngle,
+      arcHorizontalDistortion: layerStyle.arc.horizontalDistortion ?? config.arcHorizontalDistortion,
+      arcVerticalDistortion: layerStyle.arc.verticalDistortion ?? config.arcVerticalDistortion,
     } : {}),
   };
 }

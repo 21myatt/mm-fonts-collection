@@ -1,4 +1,4 @@
-import type { VisibleWordArtInspectorControl, WordArtConfig, WordArtPreset } from "../../wordart";
+import { findWordArtArcPreset, WORD_ART_ARC_PRESETS, type VisibleWordArtInspectorControl, type WordArtConfig, type WordArtPreset } from "../../wordart";
 
 export type WordArtFontOption = { id: string; name: string };
 export type WordArtConfigUpdate = <K extends keyof WordArtConfig>(key: K, value: WordArtConfig[K]) => void;
@@ -28,6 +28,21 @@ export function renderInspectorControl(control: VisibleWordArtInspectorControl, 
       <select value={props.selectedFontId} onChange={(event) => props.setSelectedFontId(event.target.value)} aria-label="Burmese font" disabled={props.loading || !props.fonts.length}>
         {!props.fonts.length && <option>{props.loading ? "Loading Burmese fonts..." : "No Burmese fonts available"}</option>}
         {props.fonts.map((font) => <option key={font.id} value={font.id}>{font.name}</option>)}
+      </select>
+    </label>;
+  }
+  if (control.type === "arcPreset") {
+    const selectedPreset = findWordArtArcPreset(props.config)?.id ?? "custom";
+    return <label key={control.type} className="word-art-select-control">{control.label}
+      <select value={selectedPreset} onChange={(event) => {
+        const preset = WORD_ART_ARC_PRESETS.find((item) => item.id === event.target.value);
+        if (!preset) return;
+        for (const [key, value] of Object.entries(preset.patch)) {
+          props.update(key as keyof WordArtConfig, value as never);
+        }
+      }}>
+        {selectedPreset === "custom" && <option value="custom">Custom</option>}
+        {WORD_ART_ARC_PRESETS.map((preset) => <option key={preset.id} value={preset.id}>{preset.label}</option>)}
       </select>
     </label>;
   }

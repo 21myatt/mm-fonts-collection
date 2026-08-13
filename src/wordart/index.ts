@@ -6,3 +6,4 @@ export * from "./export";
 export * from "./inspector";
 export * from "./layerStyle";
 export * from "./arcCanvas";
+export * from "./arcPresets";

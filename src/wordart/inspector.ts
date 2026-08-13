@@ -4,6 +4,7 @@ export type WordArtInspectorContext = { preset: WordArtPreset; config: WordArtCo
 export type WordArtInspectorControl =
   | { type: "textarea"; label: string }
   | { type: "font"; label: string }
+  | { type: "arcPreset"; label: string }
   | { type: "select"; key: keyof WordArtConfig; label: string; options: { label: string; value: string }[] }
   | { type: "range"; key: keyof WordArtConfig; label: string; min: number; max: number; step?: number; scale?: number; suffix?: string }
   | { type: "color"; key: keyof WordArtConfig; label: string }
@@ -75,6 +76,7 @@ export const wordArtInspectorGroups: { title: string; open?: boolean; visible?: 
     { type: "range", key: "bevel", label: "Softness", min: 0, max: 12, suffix: "px", visible: ({ config }) => config.depthEnabled },
   ] },
   { title: "Arc", controls: [
+    { type: "arcPreset", label: "Warp preset" },
     { type: "toggle", key: "arcEnabled", label: "Arc text" },
     { type: "select", key: "arcOrientation", label: "Orientation", options: [{ label: "Horizontal", value: "horizontal" }, { label: "Vertical", value: "vertical" }], visible: ({ config }) => config.arcEnabled },
     { type: "range", key: "arcAngle", label: "Bend", min: -100, max: 100, suffix: "%", visible: ({ config }) => config.arcEnabled },

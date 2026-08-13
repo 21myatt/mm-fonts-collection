@@ -1,7 +1,16 @@
 import type { ComponentProps } from "react";
 import WordArtRenderer from "../components/WordArtRenderer";
 import type { FontEntry } from "../types";
-import { createWordArtConfig, createWordArtStyle, renderHarfBuzzArc } from ".";
+import {
+  type ArcCanvasLayout,
+  type GlyphInkBounds,
+  calculateGlyphInkBounds,
+  createArcCanvasLayout,
+  createWordArtConfig,
+  createWordArtStyle,
+  renderHarfBuzzArc,
+} from ".";
+import type { shapeWordArtText } from "./harfbuzz";
 import type {
   WordArtConfig,
   WordArtPreset,
@@ -54,4 +63,23 @@ type _ArcRendererArgsStayReproducible = Expect<
       config: WordArtConfig,
     ]
   >
+>;
+
+type _ArcLayoutArgsStayCanvasFree = Expect<
+  Equal<
+    Parameters<typeof createArcCanvasLayout>,
+    [
+      shaped: Awaited<ReturnType<typeof shapeWordArtText>>,
+      config: WordArtConfig,
+      fontSize: number,
+    ]
+  >
+>;
+
+type _ArcLayoutReturnsLayout = Expect<
+  Equal<ReturnType<typeof createArcCanvasLayout>, ArcCanvasLayout>
+>;
+
+type _InkBoundsStayOptionalForEmptyGlyphs = Expect<
+  Equal<ReturnType<typeof calculateGlyphInkBounds>, GlyphInkBounds | null>
 >;

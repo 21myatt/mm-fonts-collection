@@ -2,6 +2,26 @@ import type { FontEntry } from "../types";
 import { shapeWordArtText, type ShapedGlyph } from "./harfbuzz";
 import type { WordArtConfig } from "./types";
 
+type ShapedWordArtText = Awaited<ReturnType<typeof shapeWordArtText>>;
+
+export type ArcCanvasLayout = {
+  fontSize: number;
+  padding: number;
+  textStartX: number;
+  sourceWidth: number;
+  sourceHeight: number;
+  outputWidth: number;
+  outputHeight: number;
+  baseline: number;
+};
+
+export type GlyphInkBounds = {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+};
+
 const fallbackArcFontSize = () =>
   Math.max(34, Math.min(window.innerWidth, window.innerHeight) * 0.09);
 const maxStableArcRadians = Math.PI * 0.92;
@@ -22,40 +42,16 @@ export async function renderHarfBuzzArc(
   const dpr = window.devicePixelRatio || 1;
   const fontSize = config.fontSize || fallbackArcFontSize();
   const shaped = await shapeWordArtText(text, fontEntry, fontSize);
-  const padding = Math.ceil(
-    fontSize * 0.45 +
-      config.outlineWidth * 3 +
-      Math.abs(config.shadowX) +
-      Math.abs(config.shadowY) +
-      config.shadowDepth,
-  );
-  const sourceWidth = Math.ceil(shaped.width + padding * 2);
-  const sourceHeight = Math.ceil(
-    shaped.ascender + shaped.descender + padding * 2,
-  );
-  const bend = Math.max(-100, Math.min(100, config.arcAngle)) / 100;
-  const bendDepth =
-    Math.abs(bend) *
-    (config.arcOrientation === "vertical" ? sourceHeight : sourceWidth) *
-    0.85;
-  const distortionPad =
-    ((Math.abs(config.arcHorizontalDistortion) +
-      Math.abs(config.arcVerticalDistortion)) /
-      100) *
-    sourceHeight *
-    0.95;
-  const outputWidth = Math.ceil(
-    sourceWidth +
-      (config.arcOrientation === "vertical" ? bendDepth * 2 : 0) +
-      padding * 2 +
-      distortionPad,
-  );
-  const outputHeight = Math.ceil(
-    sourceHeight +
-      (config.arcOrientation === "horizontal" ? bendDepth * 2 : 0) +
-      padding * 2 +
-      distortionPad,
-  );
+  const layout = createArcCanvasLayout(shaped, config, fontSize);
+  const {
+    padding,
+    sourceWidth,
+    sourceHeight,
+    outputWidth,
+    outputHeight,
+    baseline,
+    textStartX,
+  } = layout;
   const mesh = createArcWarpMesh(
     sourceWidth,
     sourceHeight,
@@ -107,8 +103,7 @@ export async function renderHarfBuzzArc(
       config.outlineGradientEnd,
       config.outlineGradientAngle,
     ) || config.outline;
-  const baseline = padding + shaped.ascender;
-  const flatPath = buildFlatTextPath(shaped.glyphs, padding, baseline);
+  const flatPath = buildFlatTextPath(shaped.glyphs, textStartX, baseline);
   const path = buildWarpedPathFromFlatTextPath(flatPath, mesh);
 
   if (
@@ -129,6 +124,63 @@ export async function renderHarfBuzzArc(
   context.globalAlpha = 1;
 }
 
+export function createArcCanvasLayout(
+  shaped: ShapedWordArtText,
+  config: WordArtConfig,
+  fontSize: number,
+): ArcCanvasLayout {
+  const padding = Math.ceil(
+    fontSize * 0.45 +
+      config.outlineWidth * 3 +
+      Math.abs(config.shadowX) +
+      Math.abs(config.shadowY) +
+      config.shadowDepth,
+  );
+  const inkBounds = calculateGlyphInkBounds(shaped.glyphs);
+  const minInkX = inkBounds?.minX ?? 0;
+  const maxInkX = inkBounds?.maxX ?? shaped.width;
+  const minInkY = inkBounds?.minY ?? -shaped.ascender;
+  const maxInkY = inkBounds?.maxY ?? shaped.descender;
+  const sourceWidth = Math.ceil(Math.max(shaped.width, maxInkX - minInkX) + padding * 2);
+  const sourceHeight = Math.ceil(
+    Math.max(shaped.ascender + shaped.descender, maxInkY - minInkY) +
+      padding * 2,
+  );
+  const bend = Math.max(-100, Math.min(100, config.arcAngle)) / 100;
+  const bendDepth =
+    Math.abs(bend) *
+    (config.arcOrientation === "vertical" ? sourceHeight : sourceWidth) *
+    0.85;
+  const distortionPad =
+    ((Math.abs(config.arcHorizontalDistortion) +
+      Math.abs(config.arcVerticalDistortion)) /
+      100) *
+    sourceHeight *
+    0.95;
+  const outputWidth = Math.ceil(
+    sourceWidth +
+      (config.arcOrientation === "vertical" ? bendDepth * 2 : 0) +
+      padding * 2 +
+      distortionPad,
+  );
+  const outputHeight = Math.ceil(
+    sourceHeight +
+      (config.arcOrientation === "horizontal" ? bendDepth * 2 : 0) +
+      padding * 2 +
+      distortionPad,
+  );
+  return {
+    fontSize,
+    padding,
+    textStartX: padding - minInkX,
+    sourceWidth,
+    sourceHeight,
+    outputWidth,
+    outputHeight,
+    baseline: padding - minInkY,
+  };
+}
+
 type FlatPathCommand = { type: string; values: number[] };
 
 type ArcWarpMesh = {
@@ -138,6 +190,37 @@ type ArcWarpMesh = {
   sourceHeight: number;
   points: { x: number; y: number }[][];
 };
+
+export function calculateGlyphInkBounds(
+  glyphs: ShapedGlyph[],
+): GlyphInkBounds | null {
+  let cursor = 0;
+  let bounds: GlyphInkBounds | null = null;
+  const include = (x: number, y: number) => {
+    if (!bounds) {
+      bounds = { minX: x, minY: y, maxX: x, maxY: y };
+      return;
+    }
+    bounds.minX = Math.min(bounds.minX, x);
+    bounds.minY = Math.min(bounds.minY, y);
+    bounds.maxX = Math.max(bounds.maxX, x);
+    bounds.maxY = Math.max(bounds.maxY, y);
+  };
+
+  for (const glyph of glyphs) {
+    for (const command of glyph.pathCommands) {
+      for (let index = 0; index < command.values.length; index += 2) {
+        include(
+          cursor + glyph.xOffset + command.values[index],
+          glyph.yOffset - command.values[index + 1],
+        );
+      }
+    }
+    cursor += glyph.xAdvance;
+  }
+
+  return bounds;
+}
 
 function buildWarpedPathFromFlatTextPath(
   commands: FlatPathCommand[],

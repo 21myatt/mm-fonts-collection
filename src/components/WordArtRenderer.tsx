@@ -1,50 +1,21 @@
 import { useEffect, useRef, type CSSProperties } from "react";
-import { WORD_ART_PRESET_STYLES, type WordArtPreset } from "../lib/wordArtPresets";
-import type { WordArtEditorConfig } from "../lib/wordArtConfig";
+import { createWordArtStyle, WORD_ART_PRESET_STYLES, type WordArtConfig, type WordArtPreset } from "../wordart";
 
 const fallbackArcFontSize = () => Math.max(34, Math.min(window.innerWidth, window.innerHeight) * 0.09);
 
-export default function WordArtRenderer({ preset, text, fontFamily, config }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtEditorConfig }) {
-  const texture = WORD_ART_PRESET_STYLES[preset].texture;
-  const texturePreset = Boolean(texture);
-  const customGradient = `linear-gradient(${config.gradientAngle}deg, ${config.gradientStart}, ${config.gradientMiddle} 50%, ${config.gradientEnd})`;
-  const gradient = texturePreset && config.gradientEnabled
-    ? preset === "six"
-      ? `linear-gradient(${config.gradientAngle}deg, ${config.gradientStart}, ${config.gradientEnd})`
-      : preset === "eight"
-        ? `radial-gradient(ellipse at center, ${config.gradientStart}, ${config.gradientEnd})`
-        : config.gradientCustom ? customGradient : texture
-    : undefined;
-  const layerShadow = config.layerDepth > 0
-    ? Array.from({ length: Math.max(1, Math.round(config.layerDepth)) }, (_, index) => {
-      const distance = index + 1;
-      const radians = config.layerAngle * Math.PI / 180;
-      return `${Math.cos(radians) * distance}px ${Math.sin(radians) * distance}px ${config.bevel}px var(--wordart-shadow-control)`;
-    }).join(", ")
-    : undefined;
-  const style = {
-    fontFamily: fontFamily ? `"${fontFamily}", sans-serif` : undefined,
-    ...(preset === "one" ? { WebkitTextStrokeColor: config.outline } : {}),
-    ...(preset === "two" ? { color: config.fill, WebkitTextFillColor: config.fill, transform: `rotate(${config.rotation}deg) skewY(-10deg)` } : {}),
-    ...(preset === "three" || preset === "four" ? { color: config.fill, WebkitTextFillColor: config.fill, WebkitTextStrokeColor: config.outline, textShadow: `${config.shadowX}px ${config.shadowY}px ${config.shadowDepth}px ${config.shadow}` , opacity: config.shadowOpacity } : {}),
-    ...(preset !== "one" && preset !== "two" && preset !== "three" && preset !== "four" ? { color: config.fill, WebkitTextFillColor: gradient ? "transparent" : config.fill, WebkitTextStrokeColor: config.outline, ...( { "--wordart-shadow-control": config.shadow } as CSSProperties) } : {}),
-    ...(gradient ? ({ "--live-wordart-gradient": gradient, backgroundSize: `${config.textureSize}% ${config.textureSize}%`, backgroundPosition: `${config.textureAngle}% 50%`, WebkitBackgroundClip: "text", backgroundClip: "text", backgroundColor: "transparent", WebkitTextFillColor: "transparent" } as CSSProperties) : {}),
-    ...(layerShadow ? ({ "--wordart-layer-shadow": layerShadow } as CSSProperties) : {}),
-  } as CSSProperties;
-  const advancedTransform = `translate(${config.translateX}px, ${config.translateY}px) ${config.perspective ? `perspective(${config.perspective}px)` : ""} scale(${config.scaleX}, ${config.scaleY}) skew(${config.skewX}deg, ${config.skewY}deg) rotateX(${config.rotateX}deg) rotateY(${config.rotateY}deg) rotateZ(${config.rotateZ}deg)`;
-  const hasAdvancedTransform = config.translateX || config.translateY || config.perspective || config.scaleX !== 1 || config.scaleY !== 1 || config.skewX || config.skewY || config.rotateX || config.rotateY || config.rotateZ;
-  const advancedStyle = { ...(hasAdvancedTransform ? { transform: advancedTransform } : {}), ...(config.fontSize ? { fontSize: `${config.fontSize}px` } : {}), ...(config.fontWeight ? { fontWeight: config.fontWeight } : {}), ...(config.fontStyle !== "normal" ? { fontStyle: config.fontStyle } : {}), ...(config.letterSpacing ? { letterSpacing: `${config.letterSpacing}px` } : {}) } as CSSProperties;
+export default function WordArtRenderer({ preset, text, fontFamily, config }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtConfig }) {
+  const { textStyle, advancedStyle, sectionStyle, gradient } = createWordArtStyle({ preset, config, fontFamily });
   if (config.arcEnabled) {
     return <div className="word-art-preview-stage word-art-arc-stage" style={{ ["--wordart-arc-radius" as string]: `${config.arcRadius}px`, ["--wordart-arc-angle" as string]: `${config.arcAngle}deg` } as CSSProperties}>
-      <section className={`style-${preset}`} style={hasAdvancedTransform ? { transform: advancedTransform } : undefined}>
+      <section className={`style-${preset}`} style={sectionStyle as CSSProperties | undefined}>
         <WordArtArcCanvas preset={preset} text={text} fontFamily={fontFamily} config={config} gradient={gradient} />
       </section>
     </div>;
   }
-  return <div className="word-art-preview-stage"><section className={`style-${preset}`} style={hasAdvancedTransform ? { transform: advancedTransform } : undefined}><div className="wordart"><h1 className={gradient ? "preview live-gradient" : "preview"} data-content={text} style={{ ...style, ...advancedStyle }}>{text}</h1></div></section></div>;
+  return <div className="word-art-preview-stage"><section className={`style-${preset}`} style={sectionStyle as CSSProperties | undefined}><div className="wordart"><h1 className={gradient ? "preview live-gradient" : "preview"} data-content={text} style={{ ...textStyle, ...advancedStyle } as CSSProperties}>{text}</h1></div></section></div>;
 }
 
-function WordArtArcCanvas({ preset, text, fontFamily, config, gradient }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtEditorConfig; gradient?: string }) {
+function WordArtArcCanvas({ preset, text, fontFamily, config, gradient }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtConfig; gradient?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

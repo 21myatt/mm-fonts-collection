@@ -10,6 +10,41 @@
   overflow: hidden;
 }
 
+.word-art-header {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 18px;
+  border-bottom: 1px solid #eef0f3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  text-align: left;
+}
+
+.word-art-header div {
+  display: grid;
+  gap: 2px;
+}
+
+.word-art-header strong {
+  color: #172033;
+  font-size: 1rem;
+}
+
+.word-art-header span {
+  color: #667085;
+  font-size: 0.78rem;
+}
+
+.word-art-mode-link {
+  padding: 0.48rem 0.65rem;
+  border: 1px solid #d1d1d1;
+  color: #526075;
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+
 .word-art-body {
   flex: 1 1 auto;
   min-height: 0;
@@ -19,19 +54,23 @@
   align-items: stretch;
 }
 
+.word-art-workbench .word-art-body {
+  flex: 1 1 auto;
+}
+
 .word-art-sidebar,
 .word-art-canvas {
   min-height: 0;
 }
 
 .word-art-sidebar {
-  width: min(360px, 32vw);
+  width: min(340px, 30vw);
   height: 100%;
   overflow: hidden;
   background: transparent;
   text-align: left;
-  flex: 0 0 min(360px, 32vw);
-  border-right: 1px solid #eef0f3;
+  flex: 0 0 min(340px, 30vw);
+  border-left: 1px solid #eef0f3;
   display: flex;
 }
 
@@ -40,7 +79,11 @@
   min-height: 0;
   height: 100%;
   overflow: auto;
-  padding: 24px;
+  padding: 18px;
+}
+
+.word-art-tabs {
+  display: none;
 }
 
 .word-art-panel,
@@ -55,14 +98,29 @@
 .word-art-panel {
   display: grid;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eef0f3;
+}
+
+.word-art-panel h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 0.86rem;
+  line-height: 1.2;
+}
+
+.word-art-swatch-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .word-art-page.word-art-workbench textarea,
 .word-art-page.word-art-workbench select {
   width: 100%;
   margin: 0;
-  padding: .6rem 1rem;
+  padding: 0.6rem 1rem;
   border: 1px solid #d1d1d1;
   border-radius: 0;
   background: transparent;
@@ -98,9 +156,10 @@
 }
 
 .word-art-color-control span {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .word-art-color-control input {
@@ -115,6 +174,8 @@
 .word-art-color-control code {
   color: #667085;
   font-size: 0.7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .word-art-range-control {
@@ -178,7 +239,7 @@
   list-style: none;
   color: #172033;
   font-weight: 700;
-  border-top: 1px solid #eef0f3;
+  border-top: 0;
 }
 
 .word-art-advanced summary::-webkit-details-marker {
@@ -193,7 +254,7 @@
 
 .word-art-export {
   width: 100%;
-  padding: .65rem .8rem;
+  padding: 0.65rem 0.8rem;
   border: 1px solid #d1d1d1;
   border-radius: 0;
   color: #526075;
@@ -203,7 +264,69 @@
   font-weight: 400;
 }
 
+.word-art-inspector-export {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.word-art-export-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.word-art-export-actions button {
+  width: 100%;
+  padding: 0.58rem 0.75rem;
+  border: 1px solid #d1d1d1;
+  background: #fff;
+  color: #526075;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.word-art-export-actions button:hover {
+  border-color: #bfc7d4;
+}
+
 .word-art-export:hover {
+  border-color: #bfc7d4;
+}
+
+.word-art-export-bar {
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 8px 18px;
+  border-top: 1px solid #eef0f3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #fff;
+}
+
+.word-art-export-bar span {
+  margin-right: auto;
+  color: #667085;
+  font-size: 0.82rem;
+}
+
+.word-art-export-bar button,
+.word-art-export-bar a {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #d1d1d1;
+  background: #fff;
+  color: #526075;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.word-art-export-bar button:hover,
+.word-art-export-bar a:hover,
+.word-art-mode-link:hover {
   border-color: #bfc7d4;
 }
 
@@ -217,10 +340,11 @@
 
 .word-art-canvas-shell {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 64px);
+  height: calc(100% - 64px);
+  margin: 32px;
   min-height: 0;
-  border: 0;
+  border: 1px solid #eef0f3;
   border-radius: 0;
   background: #fff;
   overflow: hidden;
@@ -268,15 +392,98 @@
   object-fit: contain;
 }
 
+.word-art-presets-page {
+  min-height: calc(100dvh - 68px);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.word-art-preset-toolbar {
+  flex: 0 0 auto;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eef0f3;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(220px, 320px);
+  gap: 14px;
+  text-align: left;
+}
+
+.word-art-preset-toolbar label {
+  display: grid;
+  gap: 6px;
+  color: #667085;
+  font-size: 0.82rem;
+}
+
+.word-art-preset-toolbar input,
+.word-art-preset-toolbar select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d1d1d1;
+  color: #172033;
+  background: #fff;
+  font: inherit;
+}
+
+.word-art-preset-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.word-art-preset-card {
+  min-height: 168px;
+  padding: 12px;
+  border: 1px solid #e4e7ec;
+  background: #fff;
+  color: #172033;
+  cursor: pointer;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  text-align: left;
+}
+
+.word-art-preset-card.selected {
+  border-color: #396fb9;
+  box-shadow: inset 0 0 0 1px #396fb9;
+}
+
+.word-art-preset-card > span {
+  color: #667085;
+  font-size: 0.78rem;
+}
+
+.word-art-preset-card .word-art-preview-stage {
+  min-height: 120px;
+}
+
+.word-art-preset-card section {
+  transform: scale(0.68);
+}
+
 .word-art-footer {
   flex: 0 0 auto;
-  padding: 10px 0 12px;
-  border-top: 1px solid rgba(24, 32, 49, 0.12);
+  min-height: 36px;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #eef0f3;
   color: #8a93a2;
   font-size: 12px;
-  text-align: center;
+  text-align: left;
   background: #fff;
   width: 100%;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .word-art-footer a {
@@ -303,6 +510,12 @@
   }
 }
 
+@media (max-width: 900px) {
+  .word-art-preset-grid {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+}
+
 @media (max-width: 640px) {
   .word-art-page.word-art-workbench {
     height: calc(100dvh - 66px);
@@ -316,16 +529,87 @@
   .word-art-sidebar {
     width: 100%;
     flex-basis: auto;
-    border-right: 0;
+    border-left: 0;
     border-bottom: 1px solid #eef0f3;
-    height: 42vh;
+    height: 46vh;
+    order: 2;
+    display: flex;
+    flex-direction: column;
   }
 
   .word-art-sidebar-inner {
-    padding-right: 0;
+    padding: 12px;
   }
 
   .word-art-canvas {
-    min-height: 58vh;
+    min-height: 0;
+    height: 36vh;
+    order: 1;
+  }
+
+  .word-art-canvas-shell {
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    margin: 12px;
+  }
+
+  .word-art-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid #eef0f3;
+  }
+
+  .word-art-tabs button {
+    min-height: 42px;
+    border: 0;
+    border-right: 1px solid #eef0f3;
+    background: #fff;
+    color: #667085;
+    font: inherit;
+    font-size: 0.86rem;
+  }
+
+  .word-art-tabs button:last-child {
+    border-right: 0;
+  }
+
+  .word-art-tabs button.active {
+    color: #172033;
+    box-shadow: inset 0 -2px 0 #396fb9;
+  }
+
+  .word-art-panel,
+  .word-art-advanced {
+    display: none;
+  }
+
+  .word-art-panel.active,
+  .word-art-advanced.active,
+  .word-art-inspector-export {
+    display: grid;
+  }
+
+  .word-art-swatch-row {
+    grid-template-columns: 1fr;
+  }
+
+  .word-art-header,
+  .word-art-export-bar {
+    padding-inline: 12px;
+  }
+
+  .word-art-preset-toolbar {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .word-art-preset-grid {
+    padding: 12px;
+    grid-template-columns: 1fr;
+  }
+
+  .word-art-presets-page .word-art-export-bar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 }

@@ -1,23 +1,7 @@
-export const WORD_ART_PRESETS = [
-  "one", "two", "three", "four", "five", "six", "seven", "eight",
-  "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
-  "sixteen", "seventeen", "eighteen", "nineteen", "twenty", "twentyone",
-  "twentytwo",
-] as const;
+import { WORD_ART_PRESETS, type WordArtPreset, type WordArtPresetStyle } from "./types";
 
-export type WordArtPreset = (typeof WORD_ART_PRESETS)[number];
-
-export interface WordArtPresetStyle {
-  fill: string;
-  outline: string;
-  shadow: string;
-  texture?: string;
-  transform?: string;
-  fontFamily?: string;
-  fontWeight?: number;
-  fontStyle?: string;
-  letterSpacing?: string;
-}
+export { WORD_ART_PRESETS };
+export type { WordArtPreset, WordArtPresetStyle };
 
 export const WORD_ART_PRESET_STYLES: Record<WordArtPreset, WordArtPresetStyle> = {
   one: { fill: "#ffffff", outline: "#000000", shadow: "#000000", transform: "scale(1.05, 1.25)", fontWeight: 900 },
@@ -44,5 +28,8 @@ export const WORD_ART_PRESET_STYLES: Record<WordArtPreset, WordArtPresetStyle> =
   twentytwo: { fill: "#80302d", outline: "#000000", shadow: "#a1a1a1", texture: "linear-gradient(#ccdfec 0%, #7a97bc 20%, #8aacc6 30%, #fff 50%, #80302d 52%, #e7cfc9)" },
 };
 
-export const wordArtPresetLabel = (preset: WordArtPreset) =>
+export const getWordArtPresetLabel = (preset: WordArtPreset) =>
   `WordArt ${String(WORD_ART_PRESETS.indexOf(preset) + 1).padStart(2, "0")}`;
+
+export const isWordArtPreset = (value: string): value is WordArtPreset =>
+  WORD_ART_PRESETS.includes(value as WordArtPreset);

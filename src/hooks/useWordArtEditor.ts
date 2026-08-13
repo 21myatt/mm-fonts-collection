@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { defaultWordArtConfig, type WordArtEditorConfig } from "../lib/wordArtConfig";
-import type { WordArtPreset } from "../lib/wordArtPresets";
+import { createWordArtConfig, patchWordArtConfig, type WordArtConfig, type WordArtPreset } from "../wordart";
 
 export function useWordArtEditor(preset: WordArtPreset) {
-  const [config, setConfig] = useState<WordArtEditorConfig>(() => defaultWordArtConfig(preset));
-  useEffect(() => setConfig(defaultWordArtConfig(preset)), [preset]);
-  const update = <K extends keyof WordArtEditorConfig>(key: K, value: WordArtEditorConfig[K]) => setConfig((current) => ({ ...current, [key]: value }));
+  const [config, setConfig] = useState<WordArtConfig>(() => createWordArtConfig(preset));
+  useEffect(() => setConfig(createWordArtConfig(preset)), [preset]);
+  const update = <K extends keyof WordArtConfig>(key: K, value: WordArtConfig[K]) => setConfig((current) => patchWordArtConfig(current, { [key]: value }));
   return { config, update };
 }

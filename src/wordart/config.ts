@@ -1,45 +1,6 @@
-import type { WordArtPreset } from "./wordArtPresets";
+import type { WordArtConfig, WordArtPreset } from "./types";
 
-export interface WordArtEditorConfig {
-  fill: string;
-  outline: string;
-  shadow: string;
-  rotation: number;
-  shadowX: number;
-  shadowY: number;
-  gradientEnabled: boolean;
-  gradientStart: string;
-  gradientEnd: string;
-  gradientAngle: number;
-  gradientCustom: boolean;
-  gradientMiddle: string;
-  fontSize: number;
-  fontWeight: number;
-  fontStyle: "normal" | "italic";
-  letterSpacing: number;
-  scaleX: number;
-  scaleY: number;
-  skewX: number;
-  skewY: number;
-  perspective: number;
-  translateX: number;
-  translateY: number;
-  rotateX: number;
-  rotateY: number;
-  rotateZ: number;
-  shadowDepth: number;
-  shadowOpacity: number;
-  textureSize: number;
-  textureAngle: number;
-  arcEnabled: boolean;
-  arcRadius: number;
-  arcAngle: number;
-  layerDepth: number;
-  layerAngle: number;
-  bevel: number;
-}
-
-const defaults: Record<WordArtPreset, Partial<WordArtEditorConfig>> = {
+const defaults: Record<WordArtPreset, Partial<WordArtConfig>> = {
   one: { outline: "#000000" }, two: { fill: "#000000", rotation: -3 },
   three: { fill: "#ffffff", outline: "#000000", shadow: "#999999", shadowX: 3, shadowY: 2 },
   four: { fill: "#336699", outline: "transparent", shadow: "#c1c1c1", shadowX: 2, shadowY: 1 },
@@ -56,6 +17,16 @@ const defaults: Record<WordArtPreset, Partial<WordArtEditorConfig>> = {
   twentyone: { fill: "#fe4201", outline: "#813300", shadow: "#c14d00", gradientEnabled: true }, twentytwo: { fill: "#80302d", outline: "#000000", shadow: "#a1a1a1", gradientEnabled: true },
 };
 
-export function defaultWordArtConfig(preset: WordArtPreset): WordArtEditorConfig {
+export function createWordArtConfig(preset: WordArtPreset): WordArtConfig {
   return { fill: "#ffffff", outline: "#000000", shadow: "#999999", rotation: 0, shadowX: 0, shadowY: 0, gradientEnabled: false, gradientStart: "#ffffff", gradientMiddle: "#ffffff", gradientEnd: "#000000", gradientAngle: 180, gradientCustom: false, fontSize: 0, fontWeight: 0, fontStyle: "normal", letterSpacing: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, perspective: 0, translateX: 0, translateY: 0, rotateX: 0, rotateY: 0, rotateZ: 0, shadowDepth: 1, shadowOpacity: 1, textureSize: 100, textureAngle: 0, arcEnabled: false, arcRadius: 240, arcAngle: 120, layerDepth: 0, layerAngle: 45, bevel: 0, ...defaults[preset] };
+}
+
+export const patchWordArtConfig = (config: WordArtConfig, patch: Partial<WordArtConfig>) => ({
+  ...config,
+  ...patch,
+});
+
+export function validateWordArtConfig(config: unknown): WordArtConfig {
+  if (!config || typeof config !== "object") return createWordArtConfig("one");
+  return patchWordArtConfig(createWordArtConfig("one"), config as Partial<WordArtConfig>);
 }

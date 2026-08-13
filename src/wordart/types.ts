@@ -20,6 +20,14 @@ export interface WordArtPresetStyle {
 }
 
 export interface WordArtConfig {
+  fillEnabled: boolean;
+  fillOpacity: number;
+  outlineEnabled: boolean;
+  outlineWidth: number;
+  outlineOpacity: number;
+  shadowEnabled: boolean;
+  depthEnabled: boolean;
+  depthColor: string;
   fill: string;
   outline: string;
   shadow: string;
@@ -56,6 +64,69 @@ export interface WordArtConfig {
   layerDepth: number;
   layerAngle: number;
   bevel: number;
+}
+
+export interface WordArtLayerStyle {
+  text: {
+    fontSize: number;
+    fontWeight: number;
+    fontStyle: "normal" | "italic";
+    letterSpacing: number;
+  };
+  fill: {
+    enabled: boolean;
+    color: string;
+    opacity: number;
+  };
+  stroke: {
+    enabled: boolean;
+    color: string;
+    width: number;
+    opacity: number;
+  };
+  shadow: {
+    enabled: boolean;
+    color: string;
+    x: number;
+    y: number;
+    blur: number;
+    opacity: number;
+  };
+  gradientOverlay: {
+    enabled: boolean;
+    custom: boolean;
+    start: string;
+    middle: string;
+    end: string;
+    angle: number;
+    textureSize: number;
+    texturePosition: number;
+  };
+  transform: {
+    rotation: number;
+    scaleX: number;
+    scaleY: number;
+    skewX: number;
+    skewY: number;
+    perspective: number;
+    translateX: number;
+    translateY: number;
+    rotateX: number;
+    rotateY: number;
+    rotateZ: number;
+  };
+  depth: {
+    enabled: boolean;
+    color: string;
+    layerDepth: number;
+    layerAngle: number;
+    bevel: number;
+  };
+  arc: {
+    enabled: boolean;
+    radius: number;
+    angle: number;
+  };
 }
 
 export interface WordArtRenderInput {

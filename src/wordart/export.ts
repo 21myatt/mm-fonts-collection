@@ -1,11 +1,18 @@
 import { createWordArtStyle } from "./style";
-import type { WordArtConfig, WordArtRenderInput } from "./types";
+import { createWordArtLayerStyle } from "./layerStyle";
+import type { WordArtConfig, WordArtLayerStyle, WordArtRenderInput } from "./types";
 
 export const exportWordArtJson = (config: WordArtConfig) =>
   JSON.stringify(config, null, 2);
 
 export const parseWordArtJson = (json: string) =>
   JSON.parse(json) as WordArtConfig;
+
+export const exportWordArtLayerStyleJson = (config: WordArtConfig) =>
+  JSON.stringify(createWordArtLayerStyle(config), null, 2);
+
+export const parseWordArtLayerStyleJson = (json: string) =>
+  JSON.parse(json) as WordArtLayerStyle;
 
 export function exportWordArtCss(input: WordArtRenderInput) {
   const { textStyle, advancedStyle } = createWordArtStyle(input);

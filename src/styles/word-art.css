@@ -44,6 +44,7 @@
   color: #526075;
   text-decoration: none;
   font-size: 0.82rem;
+  background: #fff;
 }
 
 .word-art-body {
@@ -83,32 +84,14 @@
   padding: 18px;
 }
 
-.word-art-tabs {
-  display: none;
-}
-
-.word-art-panel,
-.word-art-advanced {
-  margin-top: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-
-.word-art-panel {
+.word-art-group {
   display: grid;
-  gap: 12px;
   margin-bottom: 18px;
   padding-bottom: 18px;
+  border: 0;
   border-bottom: 1px solid #eef0f3;
-}
-
-.word-art-panel h2 {
-  margin: 0;
-  color: #172033;
-  font-size: 0.86rem;
-  line-height: 1.2;
+  border-radius: 0;
+  background: transparent;
 }
 
 .word-art-swatch-row {
@@ -118,7 +101,9 @@
 }
 
 .word-art-page.word-art-workbench textarea,
-.word-art-page.word-art-workbench select {
+.word-art-page.word-art-workbench select,
+.word-art-preset-toolbar input,
+.word-art-preset-toolbar select {
   width: 100%;
   margin: 0;
   padding: 0.6rem 1rem;
@@ -138,7 +123,10 @@
 }
 
 .word-art-page.word-art-workbench textarea:focus,
-.word-art-page.word-art-workbench select:focus {
+.word-art-page.word-art-workbench select:focus,
+.word-art-range-control input[type="number"]:focus,
+.word-art-preset-toolbar input:focus,
+.word-art-preset-toolbar select:focus {
   outline: 0;
   border-color: #396fb9;
   box-shadow: 0 0 0 2px #b3cdf4;
@@ -199,9 +187,27 @@
   font-weight: 700;
 }
 
-.word-art-range-control input {
+.word-art-range-control > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px;
+  gap: 8px;
+  align-items: center;
+}
+
+.word-art-range-control input[type="range"] {
   width: 100%;
   accent-color: #667085;
+}
+
+.word-art-range-control input[type="number"] {
+  width: 64px;
+  min-width: 0;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid #d1d1d1;
+  background: transparent;
+  color: #172033;
+  font: inherit;
+  font-size: 0.78rem;
 }
 
 .word-art-select-control {
@@ -229,40 +235,38 @@
   accent-color: #667085;
 }
 
-.word-art-advanced {
-  display: grid;
-  gap: 0;
-}
-
-.word-art-advanced summary {
-  padding: 1rem 0;
+.word-art-group summary {
+  position: relative;
+  padding: 0 18px 0 0;
   cursor: pointer;
   list-style: none;
   color: #172033;
   font-weight: 700;
-  border-top: 0;
+  font-size: 0.86rem;
 }
 
-.word-art-advanced summary::-webkit-details-marker {
+.word-art-group summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #667085;
+  font-weight: 400;
+}
+
+.word-art-group[open] summary::after {
+  content: "-";
+}
+
+.word-art-group summary::-webkit-details-marker {
   display: none;
 }
 
-.word-art-advanced > div {
+.word-art-group > div {
   display: grid;
   gap: 12px;
+  padding-top: 12px;
   padding-bottom: 0.25rem;
-}
-
-.word-art-export {
-  width: 100%;
-  padding: 0.65rem 0.8rem;
-  border: 1px solid #d1d1d1;
-  border-radius: 0;
-  color: #526075;
-  background: #fff;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 400;
 }
 
 .word-art-inspector-export {
@@ -288,10 +292,6 @@
 }
 
 .word-art-export-actions button:hover {
-  border-color: #bfc7d4;
-}
-
-.word-art-export:hover {
   border-color: #bfc7d4;
 }
 
@@ -420,12 +420,8 @@
 
 .word-art-preset-toolbar input,
 .word-art-preset-toolbar select {
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid #d1d1d1;
   color: #172033;
   background: #fff;
-  font: inherit;
 }
 
 .word-art-preset-grid {
@@ -478,7 +474,6 @@
   border-top: 1px solid #eef0f3;
   color: #8a93a2;
   font-size: 12px;
-  text-align: left;
   background: #fff;
   width: 100%;
   text-align: center;
@@ -552,42 +547,6 @@
     width: calc(100% - 24px);
     height: calc(100% - 24px);
     margin: 12px;
-  }
-
-  .word-art-tabs {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-bottom: 1px solid #eef0f3;
-  }
-
-  .word-art-tabs button {
-    min-height: 42px;
-    border: 0;
-    border-right: 1px solid #eef0f3;
-    background: #fff;
-    color: #667085;
-    font: inherit;
-    font-size: 0.86rem;
-  }
-
-  .word-art-tabs button:last-child {
-    border-right: 0;
-  }
-
-  .word-art-tabs button.active {
-    color: #172033;
-    box-shadow: inset 0 -2px 0 #396fb9;
-  }
-
-  .word-art-panel,
-  .word-art-advanced {
-    display: none;
-  }
-
-  .word-art-panel.active,
-  .word-art-advanced.active,
-  .word-art-inspector-export {
-    display: grid;
   }
 
   .word-art-swatch-row {

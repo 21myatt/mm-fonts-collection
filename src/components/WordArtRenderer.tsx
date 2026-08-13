@@ -2,17 +2,24 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import { createWordArtStyle, WORD_ART_PRESET_STYLES, type WordArtConfig, type WordArtPreset } from "../wordart";
 
 const fallbackArcFontSize = () => Math.max(34, Math.min(window.innerWidth, window.innerHeight) * 0.09);
+const colorWithAlpha = (color: string, alpha: number) => {
+  const hex = color.match(/^#([0-9a-f]{6})$/i)?.[1];
+  if (!hex) return color;
+  const value = Number.parseInt(hex, 16);
+  return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;
+};
 
-export default function WordArtRenderer({ preset, text, fontFamily, config }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtConfig }) {
+export default function WordArtRenderer({ preset, text, fontFamily, config, plain = false }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtConfig; plain?: boolean }) {
   const { textStyle, advancedStyle, sectionStyle, gradient } = createWordArtStyle({ preset, config, fontFamily });
+  const sectionClassName = plain ? "word-art-plain" : `style-${preset}`;
   if (config.arcEnabled) {
     return <div className="word-art-preview-stage word-art-arc-stage" style={{ ["--wordart-arc-radius" as string]: `${config.arcRadius}px`, ["--wordart-arc-angle" as string]: `${config.arcAngle}deg` } as CSSProperties}>
-      <section className={`style-${preset}`} style={sectionStyle as CSSProperties | undefined}>
+      <section className={sectionClassName} style={sectionStyle as CSSProperties | undefined}>
         <WordArtArcCanvas preset={preset} text={text} fontFamily={fontFamily} config={config} gradient={gradient} />
       </section>
     </div>;
   }
-  return <div className="word-art-preview-stage"><section className={`style-${preset}`} style={sectionStyle as CSSProperties | undefined}><div className="wordart"><h1 className={gradient ? "preview live-gradient" : "preview"} data-content={text} style={{ ...textStyle, ...advancedStyle } as CSSProperties}>{text}</h1></div></section></div>;
+  return <div className="word-art-preview-stage"><section className={sectionClassName} style={sectionStyle as CSSProperties | undefined}><div className="wordart"><h1 className={gradient ? "preview live-gradient" : "preview"} data-content={text} style={{ ...textStyle, ...advancedStyle } as CSSProperties}>{text}</h1></div></section></div>;
 }
 
 function WordArtArcCanvas({ preset, text, fontFamily, config, gradient }: { preset: WordArtPreset; text: string; fontFamily?: string; config: WordArtConfig; gradient?: string }) {
@@ -48,11 +55,10 @@ function WordArtArcCanvas({ preset, text, fontFamily, config, gradient }: { pres
     measureContext.textBaseline = "alphabetic";
     measureContext.lineJoin = "round";
     measureContext.lineCap = "round";
-    measureContext.shadowColor = config.shadow;
-    measureContext.shadowBlur = config.shadowDepth;
-    measureContext.shadowOffsetX = config.shadowX;
-    measureContext.shadowOffsetY = config.shadowY;
-    measureContext.globalAlpha = config.shadowOpacity;
+    measureContext.shadowColor = config.shadowEnabled ? colorWithAlpha(config.shadow, config.shadowOpacity) : "transparent";
+    measureContext.shadowBlur = config.shadowEnabled ? config.shadowDepth : 0;
+    measureContext.shadowOffsetX = config.shadowEnabled ? config.shadowX : 0;
+    measureContext.shadowOffsetY = config.shadowEnabled ? config.shadowY : 0;
 
     const baseline = padding + ascent;
     const fill = gradient && gradient.startsWith("linear-gradient")
@@ -63,13 +69,17 @@ function WordArtArcCanvas({ preset, text, fontFamily, config, gradient }: { pres
       if (config.gradientCustom) fill.addColorStop(0.5, config.gradientMiddle);
       fill.addColorStop(1, config.gradientEnd);
     }
-    if (config.outline !== "transparent") {
+    if (config.outlineEnabled && config.outline !== "transparent" && config.outlineWidth > 0 && config.outlineOpacity > 0) {
+      measureContext.globalAlpha = config.outlineOpacity;
       measureContext.strokeStyle = config.outline;
-      measureContext.lineWidth = Math.max(1.4, fontSize * 0.025);
+      measureContext.lineWidth = config.outlineWidth;
       measureContext.strokeText(text, padding, baseline);
     }
-    measureContext.fillStyle = fill || config.fill;
-    measureContext.fillText(text, padding, baseline);
+    if (config.fillEnabled && config.fillOpacity > 0) {
+      measureContext.globalAlpha = config.fillOpacity;
+      measureContext.fillStyle = fill || config.fill;
+      measureContext.fillText(text, padding, baseline);
+    }
     measureContext.globalAlpha = 1;
 
     const bend = config.arcAngle / 180;

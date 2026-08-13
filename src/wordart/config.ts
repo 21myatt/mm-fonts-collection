@@ -17,8 +17,9 @@ const defaults: Record<WordArtPreset, Partial<WordArtConfig>> = {
   twentyone: { fill: "#fe4201", outline: "#813300", shadow: "#c14d00", gradientEnabled: true }, twentytwo: { fill: "#80302d", outline: "#000000", shadow: "#a1a1a1", gradientEnabled: true },
 };
 
-export function createWordArtConfig(preset: WordArtPreset): WordArtConfig {
-  return { fill: "#ffffff", outline: "#000000", shadow: "#999999", rotation: 0, shadowX: 0, shadowY: 0, gradientEnabled: false, gradientStart: "#ffffff", gradientMiddle: "#ffffff", gradientEnd: "#000000", gradientAngle: 180, gradientCustom: false, fontSize: 0, fontWeight: 0, fontStyle: "normal", letterSpacing: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, perspective: 0, translateX: 0, translateY: 0, rotateX: 0, rotateY: 0, rotateZ: 0, shadowDepth: 1, shadowOpacity: 1, textureSize: 100, textureAngle: 0, arcEnabled: false, arcRadius: 240, arcAngle: 120, layerDepth: 0, layerAngle: 45, bevel: 0, ...defaults[preset] };
+export function createWordArtConfig(preset: WordArtPreset, usePresetDefaults = true): WordArtConfig {
+  const base = { fillEnabled: true, fillOpacity: 1, outlineEnabled: true, outlineWidth: 1, outlineOpacity: 1, shadowEnabled: false, depthEnabled: false, depthColor: "#666666", fill: "#111111", outline: "#000000", shadow: "#999999", rotation: 0, shadowX: 4, shadowY: 4, gradientEnabled: false, gradientStart: "#ffffff", gradientMiddle: "#ffffff", gradientEnd: "#000000", gradientAngle: 180, gradientCustom: false, fontSize: 0, fontWeight: 0, fontStyle: "normal" as const, letterSpacing: 0, scaleX: 1, scaleY: 1, skewX: 0, skewY: 0, perspective: 0, translateX: 0, translateY: 0, rotateX: 0, rotateY: 0, rotateZ: 0, shadowDepth: 4, shadowOpacity: 1, textureSize: 100, textureAngle: 0, arcEnabled: false, arcRadius: 240, arcAngle: 120, layerDepth: 8, layerAngle: 45, bevel: 0 };
+  return { ...base, ...(usePresetDefaults ? { shadowEnabled: true, ...defaults[preset] } : {}) };
 }
 
 export const patchWordArtConfig = (config: WordArtConfig, patch: Partial<WordArtConfig>) => ({

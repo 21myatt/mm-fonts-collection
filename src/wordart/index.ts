@@ -5,3 +5,4 @@ export * from "./style";
 export * from "./export";
 export * from "./inspector";
 export * from "./layerStyle";
+export * from "./arcCanvas";

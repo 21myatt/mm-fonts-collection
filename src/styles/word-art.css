@@ -11,6 +11,7 @@
 }
 
 .word-art-header {
+  width: 100%;
   flex: 0 0 auto;
   min-height: 44px;
   padding: 0 18px;
